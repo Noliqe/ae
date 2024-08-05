@@ -18,13 +18,18 @@ const TenWords = (props) => {
         displayTenWords: "none", // oefen de laatste tien woorden
         displayBtnAddWords: "inline"
     });
+    const [displayBtn, setDisplayBtn] = useState("inline")
+    const [startPractice, setStartPractice] = useState(false);
     const [currentUser, setCurrentUser] = useState("");
     const [errMsg, setErrMsg] = useState("");
     const [lastTenWords, setLastTenWords] = useState({primero: ["notLoadedYet", "notLoadedYet"]});
+    const [palabra, setPalabra] = useState([]);
+    const [currentPalabra, setCurrentPalabra] = useState("primero");
     const [translate, setTranslate] = useState("nederlands");
     const [btnText, setBtnText] = useState("Nederlands naar Español");
     const [btnSubmit, setBtnSubmit] = useState("Submit")
-    const [borderColor, setBorderColor] = useState(["grey", "grey", "grey", "grey", "grey", "grey", "grey", "grey", "grey", "grey"]);
+    const [borderColor, setBorderColor] = useState(["grey"]);
+    const [terminar, setTerminar] = useState(false);
 
     // update uid
     useEffect(() => {
@@ -138,107 +143,11 @@ const TenWords = (props) => {
             snapshot.forEach(function(doc) {
             arr.push(doc.data());
             });
+            setPalabra(arr[0].palabras.primero);
             return setLastTenWords(arr[0].palabras);
         });
     }
 
-    const checkLastTenWords = (event) => {
-        event.preventDefault()
-        let num = 0;
-        const borderArray = [];
-        if (btnSubmit === "Again") {
-            event.target[0].value = "";
-            event.target[1].value = "";
-            event.target[2].value = "";
-            event.target[3].value = "";
-            event.target[4].value = "";
-            event.target[5].value = "";
-            event.target[6].value = "";
-            event.target[7].value = "";
-            event.target[8].value = "";
-            event.target[9].value = "";
-            setBorderColor(["grey", "grey", "grey", "grey", "grey", "grey", "grey", "grey", "grey", "grey"]);
-            return setBtnSubmit("Submit")
-        } else {
-            setBtnSubmit("Again");
-        }
-        if (translate === "nederlands") {
-            num = 1;
-        }
-        // check if the answers are true or not
-        if (event.target[0].value === lastTenWords.primero[num]) {
-            borderArray.push("green");
-        } else {
-            let test = event.target[0].value + ` : ${lastTenWords.primero[num]}`;
-            event.target[0].value = test;
-            borderArray.push("red");
-        }
-        if (event.target[1].value === lastTenWords.segundo[num]) {
-            borderArray.push("green");
-        } else {
-            let test = event.target[1].value + ` : ${lastTenWords.segundo[num]}`;
-            event.target[1].value = test;
-            borderArray.push("red");
-        }
-        if (event.target[2].value === lastTenWords.segundo[num]) {
-            borderArray.push("green");
-        } else {
-            let test = event.target[2].value + ` : ${lastTenWords.tercero[num]}`;
-            event.target[2].value = test;
-            borderArray.push("red");
-        }
-        if (event.target[3].value === lastTenWords.segundo[num]) {
-            borderArray.push("green");
-        } else {
-            let test = event.target[3].value + ` : ${lastTenWords.cuarto[num]}`;
-            event.target[3].value = test;
-            borderArray.push("red");
-        }
-        if (event.target[4].value === lastTenWords.segundo[num]) {
-            borderArray.push("green");
-        } else {
-            let test = event.target[4].value + ` : ${lastTenWords.quinto[num]}`;
-            event.target[4].value = test;
-            borderArray.push("red");
-        }
-        if (event.target[5].value === lastTenWords.segundo[num]) {
-            borderArray.push("green");
-        } else {
-            let test = event.target[5].value + ` : ${lastTenWords.sexto[num]}`;
-            event.target[5].value = test;
-            borderArray.push("red");
-        }
-        if (event.target[6].value === lastTenWords.segundo[num]) {
-            borderArray.push("green");
-        } else {
-            let test = event.target[6].value + ` : ${lastTenWords.séptimo[num]}`;
-            event.target[6].value = test;
-            borderArray.push("red");
-        }
-        if (event.target[7].value === lastTenWords.segundo[num]) {
-            borderArray.push("green");
-        } else {
-            let test = event.target[7].value + ` : ${lastTenWords.octavo[num]}`;
-            event.target[7].value = test;
-            borderArray.push("red");
-        }
-        if (event.target[8].value === lastTenWords.segundo[num]) {
-            borderArray.push("green");
-        } else {
-            let test = event.target[8].value + ` : ${lastTenWords.noveno[num]}`;
-            event.target[8].value = test;
-            borderArray.push("red");
-        }
-        if (event.target[9].value === lastTenWords.décimo[num]) {
-            borderArray.push("green");
-        } else {
-            let test = event.target[9].value + ` : ${lastTenWords.segundo[num]}`;
-            event.target[9].value = test;
-            borderArray.push("red");
-        }
-        setBorderColor(borderArray); // make the borders red or green
-
-    }
 
     const handleIdioma = () => {
         if (translate === "nederlands") {
@@ -250,46 +159,168 @@ const TenWords = (props) => {
         }
     }
 
+    const handleDisplayBtn = () => {
+        setDisplayBtn("none");
 
-    // if nederlands, translate to spanish. visa versa
-    const formPracticeTenWords = () => {
+    }
+
+    const handleStart = () => {
+        if (!startPractice) {
+            return setStartPractice(true);
+        } else {
+            return setStartPractice(false);
+        }
+    }
+
+    const getPalabra = (num) => {
+        if (currentPalabra === "primero") {
+            if (num === 0) {
+                return lastTenWords.primero
+            } else {
+                setCurrentPalabra("segundo");
+                return lastTenWords.segundo
+            }
+        } else if (currentPalabra === "segundo") {
+            if (num === 0) {
+                return lastTenWords.segundo;
+            } else {
+                setCurrentPalabra("tercero");
+                return lastTenWords.tercero
+            }
+        } else if (currentPalabra === "tercero") {
+            if (num === 0) {
+                return lastTenWords.tercero;
+            } else {
+                setCurrentPalabra("cuarto");
+                return lastTenWords.cuarto
+            }
+        } else if (currentPalabra === "cuarto") {
+            if (num === 0) {
+                return lastTenWords.cuarto;
+            } else {
+                setCurrentPalabra("quinto");
+                return lastTenWords.quinto
+            }
+        } else if (currentPalabra === "quinto") {
+            if (num === 0) {
+                return lastTenWords.quinto;
+            } else {
+                setCurrentPalabra("sexto");
+                return lastTenWords.sexto
+            }
+        } else if (currentPalabra === "sexto") {
+            if (num === 0) {
+                return lastTenWords.sexto;
+            } else {
+                setCurrentPalabra("séptimo");
+                return lastTenWords.séptimo
+            }
+        } else if (currentPalabra === "séptimo") {
+            if (num === 0) {
+                return lastTenWords.séptimo;
+            } else {
+                setCurrentPalabra("octavo");
+            return lastTenWords.octavo
+            }
+        } else if (currentPalabra === "octavo") {
+            if (num === 0) {
+                return lastTenWords.octavo;
+            } else {
+                setCurrentPalabra("noveno");
+                return lastTenWords.noveno
+            }
+        } else if (currentPalabra === "noveno") {
+            if (num === 0) {
+                return lastTenWords.noveno;
+            } else {
+                setCurrentPalabra("décimo");
+                return lastTenWords.décimo;
+            }
+        } else if (currentPalabra === "décimo") {
+            if (num === 0) {
+                return lastTenWords.décimo
+            } else {
+                setCurrentPalabra("terminar");
+                return "terminar";
+            }
+
+        }
+    }
+
+    const checkPalabra = (event) => {
+        event.preventDefault()
+        let num = 0;
+        const borderArray = [];
+        let checkPalabra = getPalabra(0);
+        if (btnSubmit === "Next") {
+            event.target[0].value = "";
+            setBorderColor(["grey"]);
+            let nextPalabra = getPalabra(1);
+            if (nextPalabra === "terminar") {
+                setTerminar(true);
+                return setBtnSubmit("Done");
+            }
+            setPalabra(nextPalabra);
+            return setBtnSubmit("Submit")
+        } else {
+            setBtnSubmit("Next");
+        }
+        if (translate === "nederlands") {
+            num = 1;
+        }
+        // check if the answers are true or not
+        if (event.target[0].value === checkPalabra[num]) {
+            borderArray.push("green");
+        } else {
+            let test = event.target[0].value + ` : ${checkPalabra[num]}`;
+            event.target[0].value = test;
+            borderArray.push("red");
+        }
+        setBorderColor(borderArray); // make the borders red or green
+    }
+
+    const practiceAgain = () => {
+        setTerminar(false);
+        setCurrentPalabra("primero");
+        setBorderColor(["grey"]);
+    }
+
+    const practiceTenWords = () => {
         if (lastTenWords.primero[0] !== "notLoadedYet") {
-            if (translate === "nederlands") {
+            if (!startPractice) {
                 return (
-                    <div className='practiceNlToE' style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                        <form className='PractiveNlAE' onSubmit={checkLastTenWords} style={{display: 'flex', flexDirection: 'column', alignItems: "end", gap: "2px"}}>
-                            <label> {lastTenWords.primero[0]}: <input type="text" style={{ borderColor: borderColor[0] }} required/></label>
-                            <label> {lastTenWords.segundo[0]}: <input type="text" style={{ borderColor: borderColor[1] }} required/></label>
-                            <label> {lastTenWords.tercero[0]}: <input type="text" style={{ borderColor: borderColor[2] }} required/></label>
-                            <label> {lastTenWords.cuarto[0]}: <input type="text" style={{ borderColor: borderColor[3] }} required/></label>
-                            <label> {lastTenWords.quinto[0]}: <input type="text" style={{ borderColor: borderColor[4] }} required/></label>
-                            <label> {lastTenWords.sexto[0]}: <input type="text" style={{ borderColor: borderColor[5] }} required/></label>
-                            <label> {lastTenWords.séptimo[0]}: <input type="text" style={{ borderColor: borderColor[6] }} required/></label>
-                            <label> {lastTenWords.octavo[0]}: <input type="text" style={{ borderColor: borderColor[7] }} required/></label>
-                            <label> {lastTenWords.noveno[0]}: <input type="text" style={{ borderColor: borderColor[8] }} required/></label>
-                            <label> {lastTenWords.décimo[0]}: <input type="text" style={{ borderColor: borderColor[9] }} required/></label>
-                            <button>{btnSubmit}</button>
-                        </form>
+                    <div className='practiceTenWords'>
+                    <button onClick={() => {handleIdioma();}} style={{display: displayBtn}}>{btnText}</button>
+                    <button onClick={() => {handleDisplayBtn(); handleStart()}} style={{display: displayBtn}}>Start</button>
                 </div>
+                )
+            } else if (terminar) {
+                return (
+                    <div className='practiceTerminar' style={{display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column"}}>
+                        <p>Good Job</p>
+                        <button onClick={() => {practiceAgain()}}>Again</button>
+                    </div>
                 )
             } else {
-                return(
-                    <div className='practiceEToNl' style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
-                        <form className='PractiveEANl' onSubmit={checkLastTenWords} style={{display: 'flex', flexDirection: 'column', alignItems: "end", gap: "2px"}}>
-                            <label> {lastTenWords.primero[1]}: <input type="text" style={{ borderColor: borderColor[0] }} required/></label>
-                            <label> {lastTenWords.segundo[1]}: <input type="text" style={{ borderColor: borderColor[1] }} required/></label>
-                            <label> {lastTenWords.tercero[1]}: <input type="text" style={{ borderColor: borderColor[2] }} required/></label>
-                            <label> {lastTenWords.cuarto[1]}: <input type="text" style={{ borderColor: borderColor[3] }} required/></label>
-                            <label> {lastTenWords.quinto[1]}: <input type="text" style={{ borderColor: borderColor[4] }} required/></label>
-                            <label> {lastTenWords.sexto[1]}: <input type="text" style={{ borderColor: borderColor[5] }} required/></label>
-                            <label> {lastTenWords.séptimo[1]}: <input type="text" style={{ borderColor: borderColor[6] }} required/></label>
-                            <label> {lastTenWords.octavo[1]}: <input type="text" style={{ borderColor: borderColor[7] }} required/></label>
-                            <label> {lastTenWords.noveno[1]}: <input type="text" style={{ borderColor: borderColor[8] }} required/></label>
-                            <label> {lastTenWords.décimo[1]}: <input type="text" style={{ borderColor: borderColor[9] }} required/></label>
-                            <button>{btnSubmit}</button>
-                        </form>
-                </div>
-                )
+                if (translate === "nederlands") {
+                    return (
+                        <div className='practiceNlToE' style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                            <form className='PractiveNlAE' onSubmit={checkPalabra} style={{display: 'flex', flexDirection: 'column', alignItems: "end"}}>
+                                <label> {palabra[0]}: <input type="text" className='practiceInput' style={{ borderColor: borderColor[0] }} required/></label>
+                                <button>{btnSubmit}</button>
+                            </form>
+                    </div> 
+                    )
+                } else {
+                    return (
+                        <div className='practiceNlToE' style={{display: "flex", flexDirection: "column", alignItems: "center"}}>
+                            <form className='PractiveNlAE' onSubmit={checkPalabra} style={{display: 'flex', flexDirection: 'column', alignItems: "end"}}>
+                                <label> {palabra[1]}: <input type="text" className='practiceInput' style={{ borderColor: borderColor[0] }} required/></label>
+                                <button>{btnSubmit}</button>
+                            </form>
+                    </div> 
+                    )
+                }
             }
         }
     }
@@ -347,8 +378,7 @@ const TenWords = (props) => {
                     </form>
             </div>
             <div className='PracticeTenLastWords' style={{display: display.displayTenWords}}>
-                <button onClick={() => {handleIdioma()}}>{btnText}</button>
-                {formPracticeTenWords()}
+                {practiceTenWords()}
             </div>
         </div>
     )

@@ -36,3 +36,29 @@
     transform: rotate(360deg);
   }
 }
+
+.practiceInput {
+  border: 2px solid;
+  border-radius: 5px;
+  padding: 2px;
+  font-size: 16px;
+}
+
+.practiceInput:focus {
+  outline: none;
+}
+
+button {
+  border: 1px solid rgb(228, 226, 226);
+  border-radius: 5px;
+  background-color: rgb(216, 226, 226);
+  color: rgb(119, 119, 119);
+}
+
+button:hover {
+  background-color: rgba(216, 226, 226, 0.61);
+}
+
+button:active {
+  background-color: rgba(216, 226, 226, 0.322);
+}

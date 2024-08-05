@@ -1,0 +1,69 @@
+@media only screen and (max-width: 768px) {
+    #tests {
+        width: 80vw;
+        height: 300px;
+    }
+    #test-images {
+        height: 150px;
+    }
+}
+
+.home {
+    display: flex;
+    justify-content: center;
+    background-color: aliceblue;
+    width: 100vw;
+    height: 500px;
+    margin: 0px;
+    padding: 0px;
+    align-items: center;
+}
+
+.home-links {
+    margin: 0px;
+    padding: 0px;
+}
+
+.tests {
+    width: 30vw;
+    height: 350px;
+    background-color: rgb(215, 216, 223);
+    box-shadow: 2px 2px 2px grey;
+    border-radius: 15px;
+    font-size: 16px;
+}
+
+.first-test-image {
+    height: 200px;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    overflow: hidden;
+}
+
+.test-images {
+    height: 200px;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    overflow: hidden;  
+}
+
+.tests > h2 {
+    padding-left: 30px;
+}
+
+.tests > ul > a > li {
+    padding-top: 10px;
+    color: black;
+    text-decoration: underline;
+}
+
+.tests > ul > li {
+    padding-top: 10px;
+    color: black;
+}

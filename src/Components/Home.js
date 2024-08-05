@@ -1,14 +1,17 @@
 import { Link } from 'react-router-dom';
+import "./styles/home.css";
+import Tests from './Tests';
+import firstImage from './Images/spainIThink.jpg';
+
 
 const Home = (props) => {
   
     const handleRender = () => {
         if (props.currentUser !== null) {
             return (
-                <ul className="home-links" id='home-links'>
-                    <Link to='/diez-palabras'><li style={{color: "purple"}}>Tien woorden oefenen / 
-                    Practica diez palabras</li></Link>
-                </ul>
+                <div className="home-links" id='home-links'>
+                    <Tests className={'first-test-image'} imgSrc={firstImage} title={'Elke dag tien woorden'} link={'/diez-palabras'} testName={'Practica diez palabras'}/>
+                </div>
             )
         } else {
             return (

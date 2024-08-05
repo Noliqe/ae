@@ -11,7 +11,6 @@ const Header = (props) => {
     useEffect(() => {
         if (props.loggedIn) {
             console.log('User is logged in');
-            console.log(props.currentUser);
         }
   }, [props.loggedIn]);
 
